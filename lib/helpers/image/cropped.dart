@@ -73,18 +73,18 @@ class CroppedImage extends StatelessWidget {
         assert(offsetY != null),
         url = assetUrl;
 
-  final String url;
-  final double width, height;
-  final double scaleX, scaleY;
-  final double offsetX, offsetY;
-  final Color color;
+  final String? url;
+  final double? width, height;
+  final double? scaleX, scaleY;
+  final double? offsetX, offsetY;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      final int width = constraints.maxWidth ~/ scaleX;
-      final int height = constraints.maxHeight ~/ scaleY;
+      final int width = constraints.maxWidth ~/ scaleX!;
+      final int height = constraints.maxHeight ~/ scaleY!;
       print("WidthX: $width => ${constraints.maxWidth} => $scaleX");
       print("WidthY: $height => ${constraints.maxHeight} => $scaleY");
       return FutureBuilder<ui.Image>(
@@ -95,8 +95,8 @@ class CroppedImage extends StatelessWidget {
           }
           return CustomPaint(
             painter: ImageEditor(
-              image: snapshot.data,
-              offset: Offset(-offsetX * width, -offsetY * height),
+              image: snapshot.data!,
+              offset: Offset(-offsetX! * width, -offsetY! * height),
             ),
           );
 
@@ -119,7 +119,7 @@ class CroppedImage extends StatelessWidget {
   }
 
   Future<ui.Image> resizeImage(int width, int height) async {
-    final Uint8List m = Uint8List.view((await rootBundle.load(url)).buffer);
+    final Uint8List m = Uint8List.view((await rootBundle.load(url!)).buffer);
     final codec = await ui.instantiateImageCodec(m,
         targetHeight: height, targetWidth: width, allowUpscaling: true);
     final frameInfo = await codec.getNextFrame();
@@ -134,12 +134,12 @@ class ImageEditor extends CustomPainter {
     this.offset,
   });
 
-  ui.Image image;
-  Offset offset;
+  ui.Image? image;
+  Offset? offset;
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawImage(image, offset, Paint());
+    canvas.drawImage(image!, offset!, Paint());
   }
 
   @override
